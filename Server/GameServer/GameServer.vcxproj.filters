@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Main">
+      <UniqueIdentifier>{143ef645-a544-48c0-b7da-056db8deb728}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{090713a9-7c81-405d-b2fe-4e4e46b6590d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\AccountManager">
+      <UniqueIdentifier>{f415a093-2447-4e0c-87ca-e5fbe2e6c186}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\UserManager">
+      <UniqueIdentifier>{1b139e68-cdbe-4068-9585-c6daf8b52c43}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GameServer.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="AccountManager.cpp">
+      <Filter>Main\AccountManager</Filter>
+    </ClCompile>
+    <ClCompile Include="UserManager.cpp">
+      <Filter>Main\UserManager</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="AccountManager.h">
+      <Filter>Main\AccountManager</Filter>
+    </ClInclude>
+    <ClInclude Include="UserManager.h">
+      <Filter>Main\UserManager</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
