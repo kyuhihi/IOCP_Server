@@ -5,6 +5,8 @@
 #include <thread>
 #include <atomic>
 #include <mutex>
+#include <windows.h>
+#include <future>
 #include "AccountManager.h"
 #include "UserManager.h"
 
@@ -120,8 +122,8 @@ void HelloThread_2(int32 Num)
 //		bool bDesired = true;
 //
 //
-//		//compare_exchange_strong의 의사코드
-//		/*if (_locked == bExpected)
+//		
+//		/*if (_locked == bExpected)	//compare_exchange_strong의 의사코드
 //		{
 //			bExpected = _locked;
 //			_locked = bDesired;
@@ -134,6 +136,10 @@ void HelloThread_2(int32 Num)
 //
 //		while (_locked.compare_exchange_strong(bExpected, bDesired) == false) {// 이 한줄이 아래의 while문과 대입문을 한번에 처리할수있도록 해준다.
 //			bExpected = false;
+//
+//			//this_thread::sleep_for(std::chrono::milliseconds(100));
+//			this_thread::sleep_for(0ms);
+//			//this_thread::yield();
 //		}
 //		/*while (_locked)
 //		{
@@ -172,6 +178,81 @@ void HelloThread_2(int32 Num)
 //}
 #pragma endregion
 
+#pragma region 커널오브젝트와 Condition_variable과 Event
+//mutex m;
+//queue<int32> q;
+//HANDLE handle;
+//
+//// CV는 UserLevel Object (커널 오브젝트와 달리 동일한 프로그램내부에서만 사용가능)
+//condition_variable cv;
+//
+//void Producer() {
+//	while (true) {
+//
+//		// 1) Lock을 잡고
+//		// 2) 공유변수값을 수정
+//		// 3) Lock을 풀고
+//		// 4) 조건변수 통해 다른 쓰레드에 통지
+//
+//		{
+//			unique_lock<mutex> lock(m);
+//			q.push(100);
+//
+//		}
+//
+//		cv.notify_one(); //wait중인 쓰레드가 있으면 딱 한개를 깨운다.
+//
+//		//::SetEvent(handle); //handle을 signal 상태로 변경시킨다.
+//		
+//		
+//		//this_thread::sleep_for(1000ms);
+//	}
+//}
+//
+//void Consumer() {
+//	while (true) {
+//		//::WaitForSingleObject(handle, INFINITE);	
+//		// auto라서 자동으로 NonSignal상태로 바꿔줌.
+//		unique_lock<mutex> lock(m);
+//		cv.wait(lock, []() { return q.empty() == false; });
+//		// 1) Lock을 잡고
+//		// 2) 조건확인
+//		// - 만족O => 빠져나와서 이어서 코드실행
+//		// - 만족X => Lock을 풀어주고 대기상태
+//
+//		//그런데 notify_one을 하면 항상 조건식을 만족하는거 아닐까?
+//		// 아님. Spurious WakeUp 가짜기상
+//		// notify_one할때 lock을 잡고있지 않을수있기때문
+//
+//		//if (q.empty() == false) 
+//		{
+//			int32 data = q.front();
+//			q.pop();
+//			cout << q.size() << endl;
+//		}
+//	}
+//}
+
+#pragma endregion
+
+int64 Calculate() {
+	int64 Sum = 0;
+
+	for (int32 i = 0; i < 100'0000; i++)
+		Sum += i;
+
+	return Sum;
+}
+
+void PromiseWorker(std::promise<string>&& promise)
+{
+	promise.set_value("Secret Message");
+}
+
+void TaskWorker(std::packaged_task<int64(void)> && task)
+{
+	task();
+}
 
 int main()
 {
@@ -249,6 +330,69 @@ int main()
 	t2.join();
 	cout << sum << endl;*/
 #pragma endregion
+
+#pragma region 커널오브젝트와 Event
+	// 커널 오브젝트
+	// Usage Count
+	// Signal (파란불), Non-Signal (빨간불) << bool
+	// Auto / Manual << bool
+	//handle = ::CreateEvent(NULL, FALSE, FALSE, NULL);
+
+	/*thread t1(Producer);
+	thread t2(Consumer);
+
+	t1.join();
+	t2.join();*/
+
+
+	//::CloseHandle(handle);
+#pragma endregion
+
+	//std::future
+	{
+		// deffered -> 지연해서 실행하세요
+		// async -> 별도의 쓰레드를 만들어서 실행하세요.
+		// deffered | async -> 둘중 알아서 골라주세요~
+		// future의 장점은 함수한개자체를 특정상황에 쓰레드나 비동기로 처리할수있기때문에 유용.
+		std::future<int64> future = std::async(std::launch::async, Calculate);
+
+
+		int64 iResult = future.get();// 기다렸다가 받아모.
+		cout << iResult << endl;
+	}
+
+	//std::promise
+	{
+		// 미래(std::future)에 결과물을 반환 해줄것이라 약속(std::promise) 해줘
+		std::promise<string> promise;
+		std::future<string> future = promise.get_future();
+
+		thread t(PromiseWorker, std::move(promise));//std::move는 다른쓰레드에게 값을전달
+
+		string message = future.get();
+		cout << message << endl;
+		t.join();
+	}
+
+	//std::packaged_task
+	{
+		std::packaged_task<int64(void)> task(Calculate);
+		std::future<int64> future = task.get_future();
+
+		thread t(TaskWorker,std::move(task));
+
+		int64 sum = future.get();
+		cout << sum << endl;
+
+		t.join();
+	}
+
+	//결론
+	// mutex나 condition_value까지 가지않고 단순한 애들 처리할때
+	// 특히나 한번 발생하는 이벤트에 유용.
+	// 1) async: 원하는 함수를 비동기적으로 실행.
+	// 2) promise: 결과물을 promise를 통해 future에 받아줌.
+	// 3) packaged_task: 원하는 함수의 실행결과를 packaged_task를 통해 future로 받아줌.
 
 }
 
