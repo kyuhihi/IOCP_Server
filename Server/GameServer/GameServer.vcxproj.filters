@@ -13,6 +13,12 @@
     <Filter Include="Main\UserManager">
       <UniqueIdentifier>{1b139e68-cdbe-4068-9585-c6daf8b52c43}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Main\ConcurrentQueue">
+      <UniqueIdentifier>{b011d9b4-58ad-4b62-a214-dc444037db9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\ConcurrentStack">
+      <UniqueIdentifier>{af9051a5-619f-4bd1-8748-b5d66567eec5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameServer.cpp">
@@ -27,6 +33,12 @@
     <ClCompile Include="UserManager.cpp">
       <Filter>Main\UserManager</Filter>
     </ClCompile>
+    <ClCompile Include="ConcurrentQueue.cpp">
+      <Filter>Main\ConcurrentQueue</Filter>
+    </ClCompile>
+    <ClCompile Include="ConcurrentStack.cpp">
+      <Filter>Main\ConcurrentStack</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -37,6 +49,12 @@
     </ClInclude>
     <ClInclude Include="UserManager.h">
       <Filter>Main\UserManager</Filter>
+    </ClInclude>
+    <ClInclude Include="ConcurrentQueue.h">
+      <Filter>Main\ConcurrentQueue</Filter>
+    </ClInclude>
+    <ClInclude Include="ConcurrentStack.h">
+      <Filter>Main\ConcurrentStack</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
