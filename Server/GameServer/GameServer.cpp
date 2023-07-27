@@ -10,49 +10,76 @@
 #include "AccountManager.h"
 #include "UserManager.h"
 
+//atomic<bool> bFlag;
 
-// 가시성, 코드 재배치
-int32 x = 0;
-int32 y = 0;
-int32 r1 = 0;
-int32 r2 = 0;
+atomic<bool> ready;
+int32 value;
 
-volatile bool bReady;
+void Producer() {
 
-
-void Thread_1() {
-	while (!bReady)
-		;
-	y = 1; // Store Y
-	r1 = x; //LoadX
+	value = 10;
+	ready.store(true, memory_order::memory_order_seq_cst);
 }
-void Thread_2() {
-	while (!bReady)
+
+void Consumer() {
+	while (ready.load(memory_order::memory_order_seq_cst) == false) {
 		;
-	x = 1;
-	r2 = y;
+	}
+	cout << value << endl;;
 }
 
 int main()
 {
-	int32 count = 0;
-	while (1) {
-		bReady = false;
-		count++;
+#pragma region 기본적인 atomic 사용 함수 + 방법.
+	//bFlag = false;
 
-		x = y = r1 = r2 = 0;
-		thread t1(Thread_1);
-		thread t2(Thread_2);
+	////bFlag.store(true,memory_order::memory_order_seq_cst);
 
-		bReady = true;
+	////bool val = bFlag.load(memory_order::memory_order_seq_cst);
+	////cout << val;
+	//{
+	//	bool bPrev = bFlag.exchange(true);// exchange는 인자로 채우고싶은 값을받고, return값으로 기존값을 리턴.
 
-		t1.join();
-		t2.join();
+	//	//bool bPrev = bFlag.load();// 다른쓰레드가 flab값을 바꿨다면 유효하지 않은 prev값이 될수있음.
+	//	//bFlag.store(false);
+	//	
+	//}
+	////CAS Compare and Swap(조건부로 수정하겠다.)
+	//{
+	//	bool expected = false;
+	//	bool desired = true;
+	//	bFlag.compare_exchange_strong(expected, desired);
+	//	// 위코드의 의사코드
+	//	if (bFlag == expected) {
+	//		bFlag = desired;
+	//		return true;
+	//	}
+	//	else {
+	//		expected = bFlag;
+	//		return false;
+	//	}
+	//}
 
-		if (r1 == 0 && r2 == 0)
-			break;
-	}
+#pragma endregion
 
-	cout << count << " 번 만에 빠져나옴!!!!" << endl;
+	ready = false;
+	value = 0;
+	thread t1(Producer);
+	thread t2(Consumer);
+	t1.join();
+	t2.join();
+
+
+	// memory order 메모리 정책
+	// 1) Sequentially Consistant 일관성있다. (memory_order::memory_order_seq_cst)
+	// 2) Acquire-Release(acquire, release)
+	// 3) Relaxed (relaxed)
+
+
+	// 1번은 엄격(컴파일러입장에서 최적화 여지가 적다= 직관적)=> 가시성 바로해결.
+	// 2번은 
+	// Relaxed 자유롭다 최적화 여지가 많다..
+
+
 }
 
