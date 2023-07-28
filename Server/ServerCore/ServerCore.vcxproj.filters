@@ -7,24 +7,75 @@
     <Filter Include="Utils">
       <UniqueIdentifier>{b9f88079-30ff-4e10-b56e-628dfc246f09}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Main">
+      <UniqueIdentifier>{bdfc8c44-a1ed-41e4-82e0-f30ae25a52c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\CoreGlobal">
+      <UniqueIdentifier>{d0f0ceb2-a693-4b8a-903c-1242456e5e65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\CoreTLS">
+      <UniqueIdentifier>{3fe91318-69ae-41ac-aa26-7033722a6f33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Pch">
+      <UniqueIdentifier>{12faf09b-3d8b-4b83-914a-0f1f2a5fe7f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Pch\CorePch">
+      <UniqueIdentifier>{375ac3d1-59b1-4506-a296-53d42e073a65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Thread">
+      <UniqueIdentifier>{24fa183f-c217-4b52-b2c2-9c14e41d1012}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Thread\Lock">
+      <UniqueIdentifier>{a11dbce7-72b8-4c78-9403-2b0b3330e5dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Thread\ThreadManager">
+      <UniqueIdentifier>{15b037d0-9b56-40ba-ac60-07087e2ca91b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="pch.h">
-      <Filter>Utils</Filter>
+    <ClInclude Include="Types.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="CoreMacro.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="CoreGlobal.h">
+      <Filter>Main\CoreGlobal</Filter>
+    </ClInclude>
+    <ClInclude Include="CoreTLS.h">
+      <Filter>Main\CoreTLS</Filter>
     </ClInclude>
     <ClInclude Include="CorePch.h">
-      <Filter>Utils</Filter>
+      <Filter>Main\Pch\CorePch</Filter>
     </ClInclude>
-    <ClInclude Include="Types.h">
-      <Filter>Utils</Filter>
+    <ClInclude Include="pch.h">
+      <Filter>Main\Pch</Filter>
+    </ClInclude>
+    <ClInclude Include="Lock.h">
+      <Filter>Thread\Lock</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreadManager.h">
+      <Filter>Thread\ThreadManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="pch.cpp">
-      <Filter>Utils</Filter>
+    <ClCompile Include="CoreGlobal.cpp">
+      <Filter>Main\CoreGlobal</Filter>
+    </ClCompile>
+    <ClCompile Include="CoreTLS.cpp">
+      <Filter>Main\CoreTLS</Filter>
     </ClCompile>
     <ClCompile Include="CorePch.cpp">
-      <Filter>Utils</Filter>
+      <Filter>Main\Pch\CorePch</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>Main\Pch</Filter>
+    </ClCompile>
+    <ClCompile Include="Lock.cpp">
+      <Filter>Thread\Lock</Filter>
+    </ClCompile>
+    <ClCompile Include="ThreadManager.cpp">
+      <Filter>Thread\ThreadManager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
