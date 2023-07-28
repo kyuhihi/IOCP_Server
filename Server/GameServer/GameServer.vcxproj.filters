@@ -7,6 +7,12 @@
     <Filter Include="Utils">
       <UniqueIdentifier>{090713a9-7c81-405d-b2fe-4e4e46b6590d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Main\AccountManager">
+      <UniqueIdentifier>{cec560c9-7440-421c-a13f-9a4861a370df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\PlayerManager">
+      <UniqueIdentifier>{96c7c6d4-1d78-476f-9990-d19ab0baeb00}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameServer.cpp">
@@ -15,10 +21,22 @@
     <ClCompile Include="pch.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
+    <ClCompile Include="AccountManager.cpp">
+      <Filter>Main\AccountManager</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerManager.cpp">
+      <Filter>Main\PlayerManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="AccountManager.h">
+      <Filter>Main\AccountManager</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerManager.h">
+      <Filter>Main\PlayerManager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

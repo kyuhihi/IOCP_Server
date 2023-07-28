@@ -31,6 +31,9 @@
     <Filter Include="Thread\ThreadManager">
       <UniqueIdentifier>{15b037d0-9b56-40ba-ac60-07087e2ca91b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Thread\DeadLockProfiler">
+      <UniqueIdentifier>{ae637ea8-f5bf-41c4-8af3-ac4d1ef8952b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Types.h">
@@ -57,6 +60,9 @@
     <ClInclude Include="ThreadManager.h">
       <Filter>Thread\ThreadManager</Filter>
     </ClInclude>
+    <ClInclude Include="DeadLockProfiler.h">
+      <Filter>Thread\DeadLockProfiler</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CoreGlobal.cpp">
@@ -76,6 +82,9 @@
     </ClCompile>
     <ClCompile Include="ThreadManager.cpp">
       <Filter>Thread\ThreadManager</Filter>
+    </ClCompile>
+    <ClCompile Include="DeadLockProfiler.cpp">
+      <Filter>Thread\DeadLockProfiler</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
