@@ -9,68 +9,64 @@
 #include <future>
 #include "ThreadManager.h"
 
-// 소수 구하기.
-const int32 MAX_NUMBER = 100'0000;
-const int16 iThreadMaxNum = 5;
-
-
-list<int32> vResult;
-mutex m;
-
-void isPrime(int16 iThreadNum)
+bool IsPrime(int number)
 {
-	int32 iMakeMaxNum = MAX_NUMBER / iThreadMaxNum;
-	for (int32 i = iThreadNum * iMakeMaxNum; i < iMakeMaxNum * (iThreadNum + 1) ; ++i)
+	if (number <= 1)
+		return false;
+
+	if (number == 2 || number == 3)
+		return true;
+
+	for (int i = 2; i < number; i++)
 	{
-		if (i <= 1)//1보다 작으면 의미없음
-			continue;
-
-		if (i % 2 == 0)// 2로 나눠지면 의미없음
-			continue;
-
-		bool bSoSu = true;
-		for (int32 j = 3; j <= sqrt(i); j += 2)
-		{// 루트씌워서 더 작은값으로 나눠서 나눠떨어지면 소수아님
-			if (i % j == 0) {
-				bSoSu = false;
-				break;
-			}
-		}
-
-		if (bSoSu) {// 성공하면 vector에 담자
-			m.lock();
-			vResult.push_back(i);
-			m.unlock();
-		}
+		if ((number % i) == 0)
+			return false;
 	}
-	cout << iThreadNum << "번 쓰레드 성공!" << endl;
+
+	return true;
+}
+
+int CountPrime(int start, int end)
+{
+	int count = 0;
+
+	for (int number = start; number <= end; number++)
+	{
+		if (IsPrime(number))
+			count++;
+	}
+
+	return count;
 }
 
 int main()
 {
-	vector<thread> tVec;
-	for (int16 iThreadNum = 0; iThreadNum < iThreadMaxNum; ++iThreadNum)
+	const int MAX_NUMBER = 100'0000;
+	vector<thread> threads;
+
+	int coreCount = thread::hardware_concurrency();
+	int jobCount = (MAX_NUMBER / coreCount) + 1;
+
+	atomic<int> primeCount = 0;
+	for (int i = 0; i < coreCount; i++)
 	{
-		tVec.push_back(thread(isPrime, iThreadNum));
+		int start = (i * jobCount) + 1;
+		int end = min(MAX_NUMBER, ((i + 1) * jobCount));
+
+		threads.push_back(thread([start, end, &primeCount]()
+			{
+				primeCount += CountPrime(start, end);
+			}));
 	}
 
-	for (auto& iter : tVec) {
-		if(iter.joinable())
-			iter.join();
-	}
+	for (thread& t : threads)
+		t.join();
 
-
-	GThreadManager->Join();
+	cout << primeCount << endl;
+	//GThreadManager->Join();
 
 	
-	vResult.push_back(2);
-
-	vResult.sort();
 	
-	for (auto& iter : vResult) 
-		cout << iter << endl;
-	
-	cout << "사이즈는 " << vResult.size();
 
 
 }
