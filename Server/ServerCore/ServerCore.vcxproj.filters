@@ -34,6 +34,12 @@
     <Filter Include="Thread\DeadLockProfiler">
       <UniqueIdentifier>{ae637ea8-f5bf-41c4-8af3-ac4d1ef8952b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Memory">
+      <UniqueIdentifier>{f12f6dc1-988e-47a3-a32a-0ee8e147220f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Memory\RefCnting">
+      <UniqueIdentifier>{938c24ca-33d8-48e3-8404-4fc02dc30609}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Types.h">
@@ -63,6 +69,9 @@
     <ClInclude Include="DeadLockProfiler.h">
       <Filter>Thread\DeadLockProfiler</Filter>
     </ClInclude>
+    <ClInclude Include="RefCounting.h">
+      <Filter>Memory\RefCnting</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CoreGlobal.cpp">
@@ -85,6 +94,9 @@
     </ClCompile>
     <ClCompile Include="DeadLockProfiler.cpp">
       <Filter>Thread\DeadLockProfiler</Filter>
+    </ClCompile>
+    <ClCompile Include="RefCounting.cpp">
+      <Filter>Memory\RefCnting</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

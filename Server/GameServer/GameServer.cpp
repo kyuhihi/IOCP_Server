@@ -8,65 +8,74 @@
 #include <windows.h>
 #include <future>
 #include "ThreadManager.h"
+#include "RefCounting.h"
 
-bool IsPrime(int number)
+class Wraight : public RefCountable
 {
-	if (number <= 1)
+public:
+	int _hp = 150;
+	int _posX = 0;
+	int _posY = 0;
+};
+using WraightRef = TSharedPtr<Wraight>;
+
+class Missle : public RefCountable
+{
+public:
+	void SetTarget(WraightRef target) {
+		_target = target;
+	}
+
+	bool Update()
+	{
+		if (_target == nullptr)
+			return true;
+		
+		int posX = _target->_posX;
+		int posY = _target->_posY;
+		if (_target->_hp == 0)
+		{
+			_target->ReleaseRef();
+			_target = nullptr;
+			return true;
+		}
+
 		return false;
-
-	if (number == 2 || number == 3)
-		return true;
-
-	for (int i = 2; i < number; i++)
-	{
-		if ((number % i) == 0)
-			return false;
 	}
 
-	return true;
-}
 
-int CountPrime(int start, int end)
-{
-	int count = 0;
+	WraightRef _target = nullptr;
+};
 
-	for (int number = start; number <= end; number++)
-	{
-		if (IsPrime(number))
-			count++;
-	}
-
-	return count;
-}
+using MissleRef = TSharedPtr<Missle>;
 
 int main()
 {
-	const int MAX_NUMBER = 100'0000;
-	vector<thread> threads;
+	WraightRef wraight(new Wraight());
+	wraight->ReleaseRef();
+	MissleRef missle (new Missle());
+	missle->ReleaseRef();
 
-	int coreCount = thread::hardware_concurrency();
-	int jobCount = (MAX_NUMBER / coreCount) + 1;
+	missle->SetTarget(wraight);
 
-	atomic<int> primeCount = 0;
-	for (int i = 0; i < coreCount; i++)
+	wraight->_hp = 0;
+	
+	wraight = nullptr;
+	
+	while (true)
 	{
-		int start = (i * jobCount) + 1;
-		int end = min(MAX_NUMBER, ((i + 1) * jobCount));
-
-		threads.push_back(thread([start, end, &primeCount]()
+		if (missle)
+		{
+			if (missle->Update())
 			{
-				primeCount += CountPrime(start, end);
-			}));
+				 
+				missle = nullptr;
+			}
+		}
 	}
 
-	for (thread& t : threads)
-		t.join();
-
-	cout << primeCount << endl;
-	//GThreadManager->Join();
-
 	
-	
+	missle = nullptr;
 
 
 }
