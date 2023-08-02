@@ -1,6 +1,5 @@
 ﻿#include "pch.h"
 #include "CorePch.h"
-#include <iostream>
 
 #include <thread>
 #include <atomic>
@@ -27,46 +26,16 @@ public:
 	{
 		cout << "Knight 소멸" << endl;
 	}
-private:
+public:
 	int32 _hp = 30;
+	int32 _mp = 10;
 };
-
-
-// new operator overloading(Global)
-
-//void* operator new(size_t size)
-//{
-//	cout << "new" << size << endl;
-//	void* ptr = ::malloc(size);
-//	return ptr;
-//}
-//
-//void operator delete(void* ptr)
-//{
-//	cout << "delete" << endl;
-//	::free(ptr);
-//	return;
-//}
-//
-//void* operator new[](size_t size)
-//{
-//	cout << "new[]" << size << endl;
-//	void* ptr = ::malloc(size);
-//	return ptr;
-//}
-//
-//void operator delete[](void* ptr)
-//{
-//	cout << "delete[]" << endl;
-//	::free(ptr);
-//	return;
-//}
 
 
 int main()
 {
 	Knight* knight = xnew<Knight>(100);
-	xdelete(knight);
 
+	xdelete(knight);
 }
 

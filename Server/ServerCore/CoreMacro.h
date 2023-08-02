@@ -4,27 +4,24 @@
 // Lock
 //=========================
 
-#define USE_MANY_LOCKS(count)	Lock _locks[count];
-#define USE_LOCK				USE_MANY_LOCKS(1);
-
-#define READ_LOCK_INDEX(idx)	ReadLockGuard readLockGuard_##idx(_locks[idx],typeid(this).name());
-#define READ_LOCK				READ_LOCK_INDEX(0);
-
-#define WRITE_LOCK_INDEX(idx)	WriteLockGuard WriteLockGuard_##idx(_locks[idx],typeid(this).name());
-#define WRITE_LOCK				WRITE_LOCK_INDEX(0);
+#define USE_MANY_LOCKS(count)	Lock _locks[count]
+#define USE_LOCK				USE_MANY_LOCKS(1)
+#define READ_LOCK_INDEX(idx)	ReadLockGuard readLockGuard_##idx(_locks[idx],typeid(this).name())
+#define READ_LOCK				READ_LOCK_INDEX(0)
+#define WRITE_LOCK_INDEX(idx)	WriteLockGuard WriteLockGuard_##idx(_locks[idx],typeid(this).name())
+#define WRITE_LOCK				WRITE_LOCK_INDEX(0)
 
 //=========================
 // Memory
 //=========================
 
 #ifdef _DEBUG
-#define xalloc(size)		BaseAllocator::Alloc(size)
-#define xrelease(ptr)		BaseAllocator::Release(ptr)
+#define xAlloc(size)		StompAllocator::Alloc(size)
+#define xRelease(ptr)		StompAllocator::Release(ptr)
 #else
-#define xalloc(size)		BaseAllocator::Alloc(size)
-#define xrelease(ptr)		BaseAllocator::Release(ptr)
+#define xAlloc(size)		BaseAllocator::Alloc(size)
+#define xRelease(ptr)		BaseAllocator::Release(ptr)
 #endif
-
 
 
 //=========================
