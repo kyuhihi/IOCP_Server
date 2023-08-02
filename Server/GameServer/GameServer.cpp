@@ -8,75 +8,65 @@
 #include <windows.h>
 #include <future>
 #include "ThreadManager.h"
+
 #include "RefCounting.h"
+#include "Memory.h"
 
-class Wraight : public RefCountable
+class Knight
 {
 public:
-	int _hp = 150;
-	int _posX = 0;
-	int _posY = 0;
-};
-using WraightRef = TSharedPtr<Wraight>;
-
-class Missle : public RefCountable
-{
-public:
-	void SetTarget(WraightRef target) {
-		_target = target;
-	}
-
-	bool Update()
+	Knight()
 	{
-		if (_target == nullptr)
-			return true;
-		
-		int posX = _target->_posX;
-		int posY = _target->_posY;
-		if (_target->_hp == 0)
-		{
-			_target->ReleaseRef();
-			_target = nullptr;
-			return true;
-		}
-
-		return false;
+		cout << "Knight생성" << endl;
 	}
-
-
-	WraightRef _target = nullptr;
+	Knight(int32 hp): _hp(hp)
+	{
+		cout << "Knight생성 인자있음" << endl;
+	}
+	~Knight()
+	{
+		cout << "Knight 소멸" << endl;
+	}
+private:
+	int32 _hp = 30;
 };
 
-using MissleRef = TSharedPtr<Missle>;
+
+// new operator overloading(Global)
+
+//void* operator new(size_t size)
+//{
+//	cout << "new" << size << endl;
+//	void* ptr = ::malloc(size);
+//	return ptr;
+//}
+//
+//void operator delete(void* ptr)
+//{
+//	cout << "delete" << endl;
+//	::free(ptr);
+//	return;
+//}
+//
+//void* operator new[](size_t size)
+//{
+//	cout << "new[]" << size << endl;
+//	void* ptr = ::malloc(size);
+//	return ptr;
+//}
+//
+//void operator delete[](void* ptr)
+//{
+//	cout << "delete[]" << endl;
+//	::free(ptr);
+//	return;
+//}
+
 
 int main()
 {
-	WraightRef wraight(new Wraight());
-	wraight->ReleaseRef();
-	MissleRef missle (new Missle());
-	missle->ReleaseRef();
-
-	missle->SetTarget(wraight);
-
-	wraight->_hp = 0;
-	
-	wraight = nullptr;
-	
-	while (true)
-	{
-		if (missle)
-		{
-			if (missle->Update())
-			{
-				 
-				missle = nullptr;
-			}
-		}
-	}
-
-	
-	missle = nullptr;
-
+	Knight* knight = xnew<Knight>(100);
+	xdelete(knight);
 
 }
 

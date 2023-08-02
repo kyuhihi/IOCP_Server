@@ -40,6 +40,12 @@
     <Filter Include="Memory\RefCnting">
       <UniqueIdentifier>{938c24ca-33d8-48e3-8404-4fc02dc30609}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Memory\Memory">
+      <UniqueIdentifier>{871de784-e2fb-4a56-831d-51dcba7962db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Memory\Allocator">
+      <UniqueIdentifier>{de2bf3d6-1e5b-42ed-951b-51433e232d02}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Types.h">
@@ -72,6 +78,12 @@
     <ClInclude Include="RefCounting.h">
       <Filter>Memory\RefCnting</Filter>
     </ClInclude>
+    <ClInclude Include="Memory.h">
+      <Filter>Memory\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Allocator.h">
+      <Filter>Memory\Allocator</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CoreGlobal.cpp">
@@ -97,6 +109,12 @@
     </ClCompile>
     <ClCompile Include="RefCounting.cpp">
       <Filter>Memory\RefCnting</Filter>
+    </ClCompile>
+    <ClCompile Include="Memory.cpp">
+      <Filter>Memory\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Allocator.cpp">
+      <Filter>Memory\Allocator</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
