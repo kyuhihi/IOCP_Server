@@ -46,6 +46,9 @@
     <Filter Include="Memory\Allocator">
       <UniqueIdentifier>{de2bf3d6-1e5b-42ed-951b-51433e232d02}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Memory\MemoryPool">
+      <UniqueIdentifier>{5d31fd9e-331d-4f4d-8618-17db44b701ef}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Types.h">
@@ -87,6 +90,9 @@
     <ClInclude Include="Container.h">
       <Filter>Memory</Filter>
     </ClInclude>
+    <ClInclude Include="MemoryPool.h">
+      <Filter>Memory\MemoryPool</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CoreGlobal.cpp">
@@ -118,6 +124,9 @@
     </ClCompile>
     <ClCompile Include="Allocator.cpp">
       <Filter>Memory\Allocator</Filter>
+    </ClCompile>
+    <ClCompile Include="MemoryPool.cpp">
+      <Filter>Memory\MemoryPool</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
