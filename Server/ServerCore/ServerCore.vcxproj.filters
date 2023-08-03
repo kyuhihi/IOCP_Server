@@ -84,6 +84,9 @@
     <ClInclude Include="Allocator.h">
       <Filter>Memory\Allocator</Filter>
     </ClInclude>
+    <ClInclude Include="Container.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CoreGlobal.cpp">
