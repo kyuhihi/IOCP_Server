@@ -7,6 +7,9 @@
     <Filter Include="Utils">
       <UniqueIdentifier>{090713a9-7c81-405d-b2fe-4e4e46b6590d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Main\LockFreeStack">
+      <UniqueIdentifier>{f282d873-dc39-4ba2-973d-625cf811f1d3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameServer.cpp">
@@ -15,10 +18,16 @@
     <ClCompile Include="pch.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
+    <ClCompile Include="LockFreeStack.cpp">
+      <Filter>Main\LockFreeStack</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="LockFreeStack.h">
+      <Filter>Main\LockFreeStack</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
