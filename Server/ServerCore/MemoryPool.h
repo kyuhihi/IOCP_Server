@@ -44,6 +44,7 @@ public:
 private:
 	SLIST_HEADER _header;// 첫번째 데이터를 가리키게 될것.
 	int32 _allocSize = 0;// 메모리풀의 단일 노드 사이즈
-	atomic<int32> _allocCount = 0;
+	atomic<int32> _useCount = 0;
+	atomic<int32> _reserveCount = 0;
 };
 
