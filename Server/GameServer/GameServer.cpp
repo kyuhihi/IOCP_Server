@@ -12,38 +12,71 @@
 #include "Memory.h"
 #include "Allocator.h"
 
-class Knight
+using TL = TypeList<class Player, class Mage, class Knight, class Archer>;
+
+
+class Player
 {
+
 public:
-	int32 _hp = rand() % 100;
+	Player()
+	{
+		INIT_TL(Player);
+	}
+
+	virtual ~Player(){}
+	DECLARE_TL
+
+
 };
 
-class Monster
+class Knight : public Player
 {
 public:
-	int64 _id = 0;
+
+	Knight() { INIT_TL(Knight); }
 };
+
+class Mage : public Player
+{
+public:
+	Mage(){ INIT_TL(Mage); }
+};
+
+class Archer : public Player
+{
+public:
+	Archer() { INIT_TL(Archer); }
+};
+
+
 
 int main()
 {
-	Knight* knights[100];
+	//TypeList<Mage, Knight>::Head  whoAmI;
+	//TypeList<Mage, Knight>::Tail  whoAmI2;
 
-	for (int32 i = 0; i < 100; i++)
-		knights[i] = ObjectPool<Knight>::Pop();
+	//TypeList<Mage, TypeList<Knight,Archer>>::Head whoAmI3;//mage
+	//TypeList<Mage, TypeList<Knight,Archer>>::Tail::Head whoAmI4;//Knight
+	//TypeList<Mage, TypeList<Knight,Archer>>::Tail::Tail whoAmI5;//Archer
 
-	for (int32 i = 0; i < 100; i++) {
-		ObjectPool<Knight>::Push(knights[i]);
-		knights[i] = nullptr;
+	//Length<TypeList<Mage, Knight>>::value;
+
+	//TypeAt<TL, 0>::Result whoAmI6;
+
+	//int32 index1 = IndexOf<TL, Mage>::value;
+
+	//bool canConvert1 = Conversion<Player, Knight>::exists;
+	//bool canConvert2 = Conversion<Knight, Player>::exists;
+	//bool canConvert3 = Conversion<Knight, Mage>::exists;
+	
+	{
+		Player* player = new Player();
+		bool canCast = CanCast<Knight*>(player);
+		Knight* knight = TypeCast<Knight*>(player);
+
+		delete player;
 	}
-
-	//아래처럼 직접적으로 pop과 push를 해야하는 경우 잊어버릴수있음..
-	/*Knight* k = ObjectPool<Knight>::Pop();
-	ObjectPool<Knight>::Push(k);*/
-
-	//해결법 shared_ptr 이용 아래처럼 사용시 소멸자 에 push 함수 호출가능
-	shared_ptr<Knight> sptr = ObjectPool<Knight>::MakeShared();
-	shared_ptr<Knight> sptr2 = MakeShared<Knight>();
-
 
 	for (int32 i = 0; i < 5; i++)
 	{
@@ -51,12 +84,7 @@ int main()
 			{
 				while (true)
 				{
-					Knight* knight = xnew<Knight>();
-
-					cout << knight->_hp << endl;
-					this_thread::sleep_for(10ms);
-
-					xdelete(knight);
+					
 				}
 			});
 	}
