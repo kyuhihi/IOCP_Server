@@ -21,10 +21,7 @@ int main()
 		return 0;
 	}
 
-	// af: Address family( AF_INET - ipv4, AF_INET6 - ipv6)
-	// type: TCP(SOCK_STREAM) vs UDP(SOCK_DGRAM)
-	// protocol : 0 자동선택
-	// return : socket desc
+	
 	SOCKET listenSocket = ::socket(AF_INET, SOCK_STREAM, 0);
 	if (listenSocket == INVALID_SOCKET)
 	{
@@ -35,11 +32,11 @@ int main()
 
 
 
-	SOCKADDR_IN serverAddr; //IPv4 기준 이거 사용.
+	SOCKADDR_IN serverAddr; 
 	::memset(&serverAddr, 0, sizeof(serverAddr));
 	serverAddr.sin_family = AF_INET;
 
-	serverAddr.sin_addr.s_addr = ::htonl(INADDR_ANY);// 알아서 골라주
+	serverAddr.sin_addr.s_addr = ::htonl(INADDR_ANY);
 	serverAddr.sin_port = ::htons(7777);
 
 	if (::bind(listenSocket, (SOCKADDR*)&serverAddr, sizeof(serverAddr)) == SOCKET_ERROR)
@@ -59,7 +56,7 @@ int main()
 	//---------------------------------
 	while (true)
 	{
-		SOCKADDR_IN clientAddr; //IPv4 기준 이거 사용.
+		SOCKADDR_IN clientAddr; 
 		::memset(&clientAddr, 0, sizeof(clientAddr));
 		int32 addrLen = sizeof(clientAddr);
 
@@ -76,6 +73,37 @@ int main()
 		char ipAddress[16];
 		::inet_ntop(AF_INET, &clientAddr.sin_addr, ipAddress, sizeof(ipAddress));
 		cout << "client Connected!!! IP" << ipAddress<<endl;
+	
+		while (true)
+		{
+			char recvBuffer[1000];
+
+			this_thread::sleep_for(1s);
+
+			int32 recvLen = recv(clientSocket, recvBuffer, sizeof(recvBuffer), 0);
+			if (recvLen <= 0)
+			{
+				int32 errCode = WSAGetLastError();
+				cout << "RECV ErrorCode :" << errCode << endl;
+				return 0;
+			}
+			cout << "Recv Data! Data " << recvBuffer << endl;
+			cout << "Recv Data! Len " << recvLen << endl;
+			
+
+
+			/*int32 resultCode = send(clientSocket, recvBuffer, recvLen, 0);
+
+			if (resultCode == SOCKET_ERROR)
+			{
+				int32 errCode = ::WSAGetLastError();
+				cout << "SEND ErrorCode :" << errCode << endl;
+				return 0;
+			}*/
+
+		
+		}
+	
 	}
 
 	//---------------------------------
