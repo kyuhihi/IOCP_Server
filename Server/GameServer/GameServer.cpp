@@ -31,50 +31,64 @@ int main()
 		return 0;
 	}
 
-	SOCKADDR_IN serverAddr;
-	::memset(&serverAddr, 0, sizeof(serverAddr));
-	serverAddr.sin_family = AF_INET;
-	serverAddr.sin_addr.s_addr = ::htonl(INADDR_ANY);
-	serverAddr.sin_port = ::htons(7777);
+	//옵션을 해석하고 처리할 주체?
+	// 소켓코드 -> SOL_SOCKET
 
-	if (::bind(serverSocket, (SOCKADDR*)&serverAddr, sizeof(serverAddr)) == SOCKET_ERROR)
+
+	//SO_KEPPALIVE = 주기적으로 연결상태 확인 여부(tcp만 가능)
+	// 상대방이 소리소문없이 연결을 끊는다면?
+	
+	bool enable = true;
+	::setsockopt(serverSocket, SOL_SOCKET,SO_KEEPALIVE,(char*)&enable,sizeof(enable));
+
+
+	//SO_LINGER = 지연하다.
+	// 송신 버퍼에있는 값들을 보낼것인가? 아니며 ㄴ날릴것인가?
+	
+	//onoff  = 0이면 closesocket()이 바로 리턴. 아니면 linger 초만큼 대기(default 0)
+	LINGER linger;
+	linger.l_onoff = 1;
+	linger.l_linger = 5;// linger는 대기시간.
+	::setsockopt(serverSocket, SOL_SOCKET, SO_LINGER, (char*)&linger, sizeof(linger));
+
+	//half-close
+	//SD_SEND : send 막는다.
+	//SD_RECEIVE : recv 막
+	//SD_BOTH
+	//::shutdown(serverSocket, SD_SEND);//나는 할말 다했어
+	
+	//::closesocket(serverSocket);
+	
+	//SO_SNDBUF = 송신버퍼의 크기
+	//SO_RCVBUF  = 수신버퍼의 크기
+
+	int32 sendBufferSize;
+	int32 optionLen = sizeof(sendBufferSize);
+	::getsockopt(serverSocket,SOL_SOCKET,SO_SNDBUF,(char*)&sendBufferSize, &optionLen);
+	cout << "송신 버퍼 크기 : " << sendBufferSize << endl;
+	
+	int32 recvBufferSize;
+	optionLen = sizeof(recvBufferSize);
+	::getsockopt(serverSocket, SOL_SOCKET, SO_RCVBUF, (char*)&recvBufferSize, &optionLen);
+	cout << "수신 버퍼 크기 : " << recvBufferSize << endl;//기본 64KB
+
+
+	//SO_REUSEADDR
+	//IP주소 및 PORT 재사용
 	{
-		HandleError("Bind");
-		return 0;
+		bool enable = true;
+		setsockopt(serverSocket, SOL_SOCKET, SO_REUSEADDR, (char*)&enable, sizeof(enable));
 	}
 
-	while (true)
+	//IPPROTO_TCP
+	//TCP_NODELAY = Nagle 네이글 알고리즘 작동여부
+	//네이글? 데이터가 충분히 크면 보내고, 데이터가 크지않으면 쌓일때까지 대기
+	//장점: 불필요한 작은 데이터 패킷이 안생김.
+	// 단점:반응시간에 손해.
+	
 	{
-		SOCKADDR_IN clientAddr;
-		::memset(&clientAddr, 0, sizeof(clientAddr));
-		int32 addrLen = sizeof(clientAddr);
-
-		this_thread::sleep_for(1s);
-
-		char recvBuffer[1000];
-
-		int32 recvLen = ::recvfrom(serverSocket, recvBuffer, sizeof(recvBuffer), 0,
-			(SOCKADDR*)&clientAddr, &addrLen);
-
-		if (recvLen <= 0)
-		{
-			HandleError("RecvFrom");
-			return 0;
-		}
-
-		cout << "Recv Data! Data = " << recvBuffer << endl;
-		cout << "Recv Data! Len = " << recvLen << endl;
-
-		int32 errorCode = ::sendto(serverSocket, recvBuffer, recvLen, 0,
-			(SOCKADDR*)&clientAddr, sizeof(clientAddr));
-
-		if (errorCode == SOCKET_ERROR)
-		{
-			HandleError("SendTo");
-			return 0;
-		}
-
-		cout << "Send Data! Len = " << recvLen << endl;
+		bool enable = true;
+		::setsockopt(serverSocket, IPPROTO_TCP, TCP_NODELAY, (char*)&enable, sizeof(enable));
 	}
 
 	// 윈속 종료
