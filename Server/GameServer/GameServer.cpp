@@ -18,20 +18,23 @@ void HandleError(const char* cause)
 	cout << cause << " ErrorCode : " << errCode << endl;
 }
 
+const int32 BUFSIZE = 1000;
+
+struct Session
+{
+	SOCKET socket = INVALID_SOCKET;
+	char recvBuffer[BUFSIZE] = {};
+	int32 recvBytes = 0;
+	int32 sendBytes = 0;
+};
+
 int main()
 {
 	WSAData wsaData;
 	if (::WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
 		return 0;
 
-	// 블로킹(Blocking) 소켓
-	// accept -> 접속한 클라가 있을 때
-	// connect -> 서버 접속 성공했을 때
-	// send, sendto -> 요청한 데이터를 송신 버퍼에 복사했을 때
-	// recv, recvfrom -> 수신 버퍼에 도착한 데이터가 있고, 이를 유저레벨 버퍼에 복사했을 때
-
-	// 논블로킹(Non-Blocking)
-
+	
 	SOCKET listenSocket = ::socket(AF_INET, SOCK_STREAM, 0);
 	if (listenSocket == INVALID_SOCKET)
 		return 0;
@@ -54,61 +57,83 @@ int main()
 
 	cout << "Accept" << endl;
 
-	SOCKADDR_IN clientAddr;
-	int32 addrLen = sizeof(clientAddr);
+	// select model = select 함수가 핵심
+	// 소켓 함수 호출이 성공할때를 미리알수있다
 
-	// Accept
+	vector<Session> sessions;
+	sessions.reserve(100);
+
+	fd_set reads;
+	fd_set writes;
 	while (true)
 	{
-		SOCKET clientSocket = ::accept(listenSocket, (SOCKADDR*)&clientAddr, &addrLen);
-		if (clientSocket == INVALID_SOCKET)
-		{
-			// 원래 블록했어야 했는데... 너가 논블로킹으로 하라며?
-			if (::WSAGetLastError() == WSAEWOULDBLOCK)
-				continue;
+		//소켓 셋 초기화
+		FD_ZERO(&reads);
+		FD_ZERO(&writes);
 
-			// Error
-			break;
+		//listen socket 등록
+		FD_SET(listenSocket, &reads);
+
+		for (Session& s : sessions)
+		{
+			if (s.recvBytes <= s.sendBytes)
+			{
+				FD_SET(s.socket,&reads);
+			}
+			else
+			{
+				FD_SET(s.socket, &writes);
+			}
 		}
 
-		cout << "Client Connected!" << endl;
+		int32 retVal = ::select(0, &reads, &writes, nullptr, nullptr);
+		if (retVal == SOCKET_ERROR)
+			break;
 
-		// Recv
-		while (true)
+		//Listener 소켓 체크
+		if (FD_ISSET(listenSocket, &reads))
 		{
-			char recvBuffer[1000];
-			int32 recvLen = ::recv(clientSocket, recvBuffer, sizeof(recvBuffer), 0);
-			if (recvLen == SOCKET_ERROR)
+			SOCKADDR_IN clientAddr;
+			int32 addrLen = sizeof(clientAddr);
+			SOCKET clientSocket = ::accept(listenSocket, (SOCKADDR*)&clientAddr, &addrLen);
+			if (clientSocket != INVALID_SOCKET)
 			{
-				// 원래 블록했어야 했는데... 너가 논블로킹으로 하라며?
-				if (::WSAGetLastError() == WSAEWOULDBLOCK)
-					continue;
-
-				// Error
-				break;
+				cout << "Client Connected!!!" << endl;
+				sessions.push_back(Session{ clientSocket });
 			}
-			else if (recvLen == 0)
-			{
-				// 연결 끊김
-				break;
-			}
+		}
 
-			cout << "Recv Data Len = " << recvLen << endl;
+		//나머지 소켓 체크
+		for (Session& s : sessions)
+		{
 
-			// Send
-			while (true)
+			//readcheck
+			if (FD_ISSET(s.socket, &reads))
 			{
-				if (::send(clientSocket, recvBuffer, recvLen, 0) == SOCKET_ERROR)
+				int32 recvLen = ::recv(s.socket, s.recvBuffer, BUFSIZE, 0);
+				if (recvLen <= 0)
 				{
-					// 원래 블록했어야 했는데... 너가 논블로킹으로 하라며?
-					if (::WSAGetLastError() == WSAEWOULDBLOCK)
-						continue;
-					// Error
-					break;
+					// 연결이 끊긴 상황 session에서 제거해야함.
+					continue;
 				}
+				s.recvBytes = recvLen;
+			}
 
-				cout << "Send Data ! Len = " << recvLen << endl;
-				break;
+			//writeCheck
+			if (FD_ISSET(s.socket, &writes))
+			{
+				int32 sendLen = ::send(s.socket, &s.recvBuffer[s.sendBytes], s.recvBytes - s.sendBytes,0);
+				if (sendLen == SOCKET_ERROR)
+				{
+					// 연결이 끊긴 상황 session에서 제거해야함.
+					continue;
+				}
+				s.sendBytes += sendLen;
+				if (s.recvBytes == s.sendBytes)
+				{
+					s.recvBytes = 0;
+					s.sendBytes = 0;
+				}
 			}
 		}
 	}
