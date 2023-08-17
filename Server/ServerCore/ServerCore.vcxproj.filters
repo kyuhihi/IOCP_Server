@@ -52,6 +52,12 @@
     <Filter Include="Memory\ObjectPool">
       <UniqueIdentifier>{a760b5e9-7110-460a-a9e7-6a76e73a70f4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Network\SocketUtils">
+      <UniqueIdentifier>{cfd84699-0fca-484c-8602-3c53d00c9e32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network\NetworkAddress">
+      <UniqueIdentifier>{b5623a7f-65da-48b0-b87a-b750dbeeb531}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Types.h">
@@ -102,6 +108,12 @@
     <ClInclude Include="TypeCast.h">
       <Filter>Memory</Filter>
     </ClInclude>
+    <ClInclude Include="SocketUtils.h">
+      <Filter>Network\SocketUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkAddress.h">
+      <Filter>Network\NetworkAddress</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CoreGlobal.cpp">
@@ -139,6 +151,12 @@
     </ClCompile>
     <ClCompile Include="ObjectPool.cpp">
       <Filter>Memory\ObjectPool</Filter>
+    </ClCompile>
+    <ClCompile Include="SocketUtils.cpp">
+      <Filter>Network\SocketUtils</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkAddress.cpp">
+      <Filter>Network\NetworkAddress</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
