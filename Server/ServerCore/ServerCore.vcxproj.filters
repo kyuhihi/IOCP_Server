@@ -58,6 +58,18 @@
     <Filter Include="Network\NetworkAddress">
       <UniqueIdentifier>{b5623a7f-65da-48b0-b87a-b750dbeeb531}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Network\IocpCore">
+      <UniqueIdentifier>{6a659698-ab53-4765-b6a5-bd762af83432}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network\IocpEvent">
+      <UniqueIdentifier>{1dcfd7c9-c30e-47eb-8858-6db3ee5d96f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network\Listener">
+      <UniqueIdentifier>{49a8ef43-4f55-450d-8c7b-0c3c20aae7e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network\Session">
+      <UniqueIdentifier>{953276b1-5dbf-4d9b-a914-49f99592d39c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Types.h">
@@ -114,6 +126,18 @@
     <ClInclude Include="NetworkAddress.h">
       <Filter>Network\NetworkAddress</Filter>
     </ClInclude>
+    <ClInclude Include="IocpCore.h">
+      <Filter>Network\IocpCore</Filter>
+    </ClInclude>
+    <ClInclude Include="IocpEvent.h">
+      <Filter>Network\IocpEvent</Filter>
+    </ClInclude>
+    <ClInclude Include="Listener.h">
+      <Filter>Network\Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="Session.h">
+      <Filter>Network\Session</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CoreGlobal.cpp">
@@ -157,6 +181,18 @@
     </ClCompile>
     <ClCompile Include="NetworkAddress.cpp">
       <Filter>Network\NetworkAddress</Filter>
+    </ClCompile>
+    <ClCompile Include="IocpCore.cpp">
+      <Filter>Network\IocpCore</Filter>
+    </ClCompile>
+    <ClCompile Include="IocpEvent.cpp">
+      <Filter>Network\IocpEvent</Filter>
+    </ClCompile>
+    <ClCompile Include="Listener.cpp">
+      <Filter>Network\Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="Session.cpp">
+      <Filter>Network\Session</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
