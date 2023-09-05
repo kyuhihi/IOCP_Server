@@ -37,7 +37,7 @@ Type* xnew(Args&&... args)
 }
 
 template<typename Type>
-void xdelete(Type* obj)
+void xDelete(Type* obj)
 {
 	obj->~Type();
 	PoolAllocator::Release(obj);
@@ -46,5 +46,5 @@ void xdelete(Type* obj)
 template<typename Type>
 shared_ptr<Type> MakeShared()
 {
-	return shared_ptr<Type>{xnew<Type>(), xdelete<Type>()};
+	return shared_ptr<Type>{xnew<Type>(), xDelete<Type>()};
 }
